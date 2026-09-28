@@ -1,0 +1,491 @@
+<html lang="id" class="scroll-smooth"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katalog Produk - TEFA SMKN 40 Jakarta</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body {
+font-family: 'Inter', sans-serif;
+background-color: #fafafa;
+}
+/* Technical Grid Background */
+.bg-grid-pattern {
+background-image: linear-gradient(to right, #e5e5e5 1px, transparent 1px),
+linear-gradient(to bottom, #e5e5e5 1px, transparent 1px);
+background-size: 40px 40px;
+}
+/* Custom Scrollbar for Filters */
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+/* Animation for Modal */
+.modal-enter {
+    opacity: 0;
+    transform: scale(0.95);
+}
+.modal-enter-active {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 300ms ease-out, transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.modal-exit {
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 200ms ease-in, transform 200ms ease-in;
+}
+</style>
+</head>
+<body class="bg-grid-pattern text-slate-800 antialiased selection:bg-orange-200 selection:text-slate-900 overflow-x-hidden">
+
+    <!-- Floating Navbar (Consistent) -->
+    <div class="fixed top-6 left-0 right-0 z-40 flex justify-center px-4">
+        <nav class="bg-white/90 backdrop-blur-xl border border-slate-200/80 rounded-full shadow-xl shadow-slate-200/20 py-3 px-6 md:px-8 flex items-center justify-between gap-8 max-w-5xl w-full transition-all duration-300">
+            <!-- Logo Area -->
+            <a href="index.html" class="flex items-center gap-2.5 group">
+                <img src="assets/Asli.png" alt="TEFA Logo" class="h-8 w-auto object-contain">
+                <div class="flex flex-col leading-none">
+                    <span class="text-xs font-bold tracking-wide text-slate-900">TEFA FOURTY</span>
+                    <span class="text-[10px] text-slate-500 font-medium tracking-widest uppercase">Production House</span>
+                </div>
+            </a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center gap-1 bg-slate-100/50 p-1 rounded-full">
+                <a href="index.html" class="px-4 py-1.5 text-xs font-medium text-slate-600 hover:bg-white hover:shadow-sm hover:text-slate-900 rounded-full transition-all">Home</a>
+                <a href="index.html#services" class="px-4 py-1.5 text-xs font-medium text-slate-600 hover:bg-white hover:shadow-sm hover:text-slate-900 rounded-full transition-all">Layanan</a>
+                <a href="katalog.html" class="px-4 py-1.5 text-xs font-medium text-slate-900 bg-white shadow-sm rounded-full transition-all">Katalog</a>
+                <a href="index.html#about" class="px-4 py-1.5 text-xs font-medium text-slate-600 hover:bg-white hover:shadow-sm hover:text-slate-900 rounded-full transition-all">Tentang</a>
+            </div>
+
+            <!-- Action -->
+            <div class="flex items-center gap-3">
+                <div class="relative hidden sm:block">
+                    <input type="text" placeholder="Cari produk..." class="pl-8 pr-4 py-1.5 bg-slate-100 rounded-full text-xs focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:bg-white transition-all w-32 focus:w-48 border border-transparent focus:border-orange-200">
+                    <iconify-icon icon="lucide:search" class="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" width="12"></iconify-icon>
+                </div>
+                <button class="md:hidden p-2 text-slate-900 bg-slate-100 rounded-full">
+                    <iconify-icon icon="lucide:menu" width="20"></iconify-icon>
+                </button>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Page Header -->
+    <section class="pt-40 pb-12 px-6 bg-white border-b border-slate-200">
+        <div class="max-w-7xl mx-auto text-center">
+            <span class="text-orange-600 font-bold tracking-widest text-xs uppercase mb-3 block">Katalog Lengkap</span>
+            <h1 class="text-4xl md:text-5xl font-bold tracking-tighter text-slate-900 mb-4">Semua Produk</h1>
+            <p class="text-slate-500 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
+                Jelajahi seluruh layanan dan produk percetakan digital TEFA Forty. Kualitas industri dengan sentuhan kreativitas siswa.
+            </p>
+        </div>
+    </section>
+
+    <!-- Filters & Grid -->
+    <section class="py-12 px-6 min-h-screen">
+        <div class="max-w-7xl mx-auto">
+            
+            <!-- Sticky Filter Category -->
+            <div class="sticky top-24 z-30 bg-[#fafafa]/95 backdrop-blur-sm py-4 mb-10 -mx-6 px-6 md:mx-0 md:px-0">
+                <div class="flex items-center gap-2 overflow-x-auto hide-scrollbar pb-2 md:justify-center md:flex-wrap" id="categoryFilters">
+                    <!-- Filter Item: Active -->
+                    <button class="filter-btn active shrink-0 px-5 py-2 rounded-full text-xs font-medium bg-slate-900 text-white border border-slate-900 transition-all hover:shadow-lg hover:text-white" data-filter="all">
+                        Semua
+                    </button>
+                    <!-- Filter Item: Inactive -->
+                    <button class="filter-btn shrink-0 px-5 py-2 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:text-slate-900 transition-all" data-filter="tshirt">
+                        T-Shirt
+                    </button>
+                    <button class="filter-btn shrink-0 px-5 py-2 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:text-slate-900 transition-all" data-filter="mug">
+                        Mug
+                    </button>
+                    <button class="filter-btn shrink-0 px-5 py-2 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:text-slate-900 transition-all" data-filter="tumbler">
+                        Tumbler
+                    </button>
+                    <button class="filter-btn shrink-0 px-5 py-2 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:text-slate-900 transition-all" data-filter="sticker">
+                        Sticker
+                    </button>
+                    <button class="filter-btn shrink-0 px-5 py-2 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:text-slate-900 transition-all" data-filter="jersey">
+                        Jersey
+                    </button>
+                    <button class="filter-btn shrink-0 px-5 py-2 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:text-slate-900 transition-all" data-filter="print">
+                        Printing
+                    </button>
+                    <button class="filter-btn shrink-0 px-5 py-2 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:text-slate-900 transition-all" data-filter="design">
+                        Desain
+                    </button>
+                </div>
+            </div>
+
+            <!-- Product Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10" id="productGrid">
+                
+                <!-- Product 0: Kaos Kemerdekaan -->
+                <div class="group cursor-pointer product-card" data-category="T-Shirt" onclick="openProductModal('Kaos Kemerdekaan', 'Kaos kemerdekaan dengan desain custom berkualitas premium. Cocok untuk memeriahkan hari kemerdekaan.', ['assets/galeri-produk/kaos/Desain utama kaos.png', 'assets/galeri-produk/kaos/Desain utama kaos.png', 'assets/galeri-produk/kaos/Desain utama.png'], 'Mulai Rp 35.000')">
+                    <div class="aspect-[1/1.1] rounded-2xl bg-slate-100 relative overflow-hidden mb-4 border border-slate-100">
+                        <img src="assets/galeri-produk/kaos/Desain utama kaos.png" alt="Card E-Money Custom" class="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105 p-4">
+                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider text-slate-900 shadow-sm">Best Seller</div>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 leading-tight group-hover:text-orange-600 transition-colors">Kaos Kemerdakaan</h3>
+                    <p class="text-sm text-slate-500 mt-1">Desain Custom • Bahan Premium</p>
+                </div>
+                                
+                <!-- Product 1: Card E-Money -->
+                <div class="group cursor-pointer product-card" data-category="print" onclick="openProductModal('Card E-Money Custom', 'Card e-money dengan desain custom berkualitas premium. Cocok untuk souvenir perusahaan, event, atau merchandise.', ['assets/card-emoney/card-desain.png', 'assets/card-emoney/card-desain2.png', 'assets/card-emoney/card-desain3.png', 'assets/card-emoney/card-desain4.png'], 'Mulai Rp 12.000')">
+                    <div class="aspect-[1/1.1] rounded-2xl bg-slate-100 relative overflow-hidden mb-4 border border-slate-100">
+                        <img src="assets/card-emoney/card-desain.png" alt="Card E-Money Custom" class="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105 p-4">
+                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider text-slate-900 shadow-sm">Best Seller</div>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 leading-tight group-hover:text-orange-600 transition-colors">Card E-Money Custom</h3>
+                    <p class="text-sm text-slate-500 mt-1">Desain Custom • Premium Quality</p>
+                </div>
+
+                <!-- Product 2: Bantal Custom -->
+                <div class="group cursor-pointer product-card" data-category="mug" onclick="openProductModal('Bantal Custom Premium', 'Bantal dengan desain custom menggunakan teknik printing berkualitas tinggi. Bahan lembut dan nyaman.', ['assets/galeri-produk/bantal/produk-desain.png', 'assets/galeri-produk/bantal/produk-desain2.png', 'assets/galeri-produk/bantal/produk-desain3.png', 'assets/galeri-produk/bantal/produk-utama.png'], 'Mulai Rp 45.000')">
+                    <div class="aspect-[1/1.1] rounded-2xl bg-slate-100 relative overflow-hidden mb-4 border border-slate-100">
+                        <img src="assets/galeri-produk/bantal/produk-desain.png" alt="Bantal Custom" class="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105 p-4">
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 leading-tight group-hover:text-orange-600 transition-colors">Bantal Custom</h3>
+                    <p class="text-sm text-slate-500 mt-1">Full Printing • Bahan Lembut</p>
+                </div>
+
+                <!-- Product 3: Payung Custom -->
+                <div class="group cursor-pointer product-card" data-category="sticker" onclick="openProductModal('Payung Custom Premium', 'Payung lipat dengan desain custom berkualitas. Tahan lama dan cocok untuk merchandise atau souvenir.', ['assets/galeri-produk/payung/produk-desain.png', 'assets/galeri-produk/payung/product-desaiin-contact.png'], 'Mulai Rp 35.000')">
+                    <div class="aspect-[1/1.1] rounded-2xl bg-slate-100 relative overflow-hidden mb-4 border border-slate-100">
+                        <img src="assets/galeri-produk/payung/produk-desain.png" alt="Payung Custom" class="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105 p-4">
+                        <div class="absolute top-3 left-3 bg-slate-900 text-white px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider shadow-sm">Promo</div>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 leading-tight group-hover:text-orange-600 transition-colors">Payung Custom</h3>
+                    <p class="text-sm text-slate-500 mt-1">Lipat Otomatis • Desain Custom</p>
+                </div>
+
+                <!-- Product 4: Totebag Custom -->
+                <div class="group cursor-pointer product-card" data-category="tumbler" onclick="openProductModal('Totebag Custom Premium', 'Totebag kanvas dengan printing custom berkualitas. Ramah lingkungan dan cocok untuk berbagai acara.', ['assets/galeri-produk/totebag/produk-desain.png', 'assets/galeri-produk/totebag/produk-desain2.png', 'assets/galeri-produk/totebag/produk-desain3.png', 'assets/galeri-produk/totebag/produk-desain4.png'], 'Mulai Rp 25.000')">
+                    <div class="aspect-[1/1.1] rounded-2xl bg-slate-100 relative overflow-hidden mb-4 border border-slate-100">
+                        <img src="assets/galeri-produk/totebag/produk-desain.png" alt="Totebag Custom" class="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105 p-4">
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 leading-tight group-hover:text-orange-600 transition-colors">Totebag Custom</h3>
+                    <p class="text-sm text-slate-500 mt-1">Kanvas Premium • Eco Friendly</p>
+                </div>
+
+                <!-- Product 5: Bantal Dekoratif -->
+                <div class="group cursor-pointer product-card" data-category="jersey" onclick="openProductModal('Bantal Dekoratif Custom', 'Bantal dekoratif dengan desain menarik. Material berkualitas tinggi untuk kenyamanan maksimal.', ['assets/galeri-produk/bantal/produk-desain2.png', 'assets/galeri-produk/bantal/produk-desain.png', 'assets/galeri-produk/bantal/produk-desain3.png', 'assets/galeri-produk/bantal/produk-utama.png'], 'Mulai Rp 50.000')">
+                    <div class="aspect-[1/1.1] rounded-2xl bg-slate-100 relative overflow-hidden mb-4 border border-slate-100">
+                        <img src="assets/galeri-produk/bantal/produk-desain2.png" alt="Bantal Dekoratif" class="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105 p-4">
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 leading-tight group-hover:text-orange-600 transition-colors">Bantal Dekoratif</h3>
+                    <p class="text-sm text-slate-500 mt-1">Full Print • Material Premium</p>
+                </div>
+
+                <!-- Product 6: Card E-Money Desain 2 -->
+                <div class="group cursor-pointer product-card" data-category="print" onclick="openProductModal('Card E-Money Premium Design', 'Card e-money dengan desain eksklusif. Kualitas printing tajam dan tahan lama untuk penggunaan jangka panjang.', ['assets/card-emoney/card-desain2.png', 'assets/card-emoney/card-desain.png', 'assets/card-emoney/card-desain3.png', 'assets/card-emoney/card-desain4.png'], 'Mulai Rp 15.000')">
+                    <div class="aspect-[1/1.1] rounded-2xl bg-slate-100 relative overflow-hidden mb-4 border border-slate-100">
+                        <img src="assets/card-emoney/card-desain2.png" alt="Card E-Money Premium" class="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105 p-4">
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 leading-tight group-hover:text-orange-600 transition-colors">Card E-Money Premium</h3>
+                    <p class="text-sm text-slate-500 mt-1">Desain Eksklusif • High Quality</p>
+                </div>
+
+                <!-- Product 7: Bantal Motif -->
+                <div class="group cursor-pointer product-card" data-category="design" onclick="openProductModal('Bantal Custom Motif', 'Bantal dengan motif custom pilihan. Nyaman dan cocok untuk dekorasi rumah atau hadiah spesial.', ['assets/galeri-produk/bantal/produk-desain3.png', 'assets/galeri-produk/bantal/produk-desain.png', 'assets/galeri-produk/bantal/produk-desain2.png', 'assets/galeri-produk/bantal/produk-utama.png'], 'Mulai Rp 48.000')">
+                    <div class="aspect-[1/1.1] rounded-2xl bg-slate-100 relative overflow-hidden mb-4 border border-slate-100">
+                        <img src="assets/galeri-produk/bantal/produk-desain3.png" alt="Bantal Custom Motif" class="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105 p-4">
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 leading-tight group-hover:text-orange-600 transition-colors">Bantal Custom Motif</h3>
+                    <p class="text-sm text-slate-500 mt-1">Motif Pilihan • Bahan Nyaman</p>
+                </div>
+
+                <!-- Product 8: Totebag Premium -->
+                <div class="group cursor-pointer product-card" data-category="print" onclick="openProductModal('Totebag Premium Design', 'Totebag premium dengan desain custom eksklusif. Bahan kanvas tebal untuk daya tahan maksimal.', ['assets/galeri-produk/totebag/produk-desain2.png', 'assets/galeri-produk/totebag/produk-desain.png', 'assets/galeri-produk/totebag/produk-desain3.png', 'assets/galeri-produk/totebag/produk-desain4.png'], 'Mulai Rp 30.000')">
+                    <div class="aspect-[1/1.1] rounded-2xl bg-slate-100 relative overflow-hidden mb-4 border border-slate-100">
+                        <img src="assets/galeri-produk/totebag/produk-desain2.png" alt="Totebag Premium" class="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105 p-4">
+                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider text-slate-900 shadow-sm">Bulk Order</div>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 leading-tight group-hover:text-orange-600 transition-colors">Totebag Premium</h3>
+                    <p class="text-sm text-slate-500 mt-1">Kanvas Tebal • Desain Eksklusif</p>
+                </div>
+
+            </div>
+
+            <!-- Empty State (Hidden by default) -->
+            <div id="emptyState" class="hidden text-center py-20">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-100 text-slate-400 mb-4">
+                    <iconify-icon icon="lucide:package-open" width="32"></iconify-icon>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900">Produk tidak ditemukan</h3>
+                <p class="text-slate-500 text-sm">Coba pilih kategori lainnya.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Detail Modal (Overlay) -->
+    <div id="productModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity opacity-0" id="modalBackdrop"></div>
+
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+                <!-- Modal Panel -->
+                <div class="relative transform overflow-hidden rounded-3xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-4xl opacity-0 scale-95" id="modalPanel">
+                    
+                    <button type="button" class="absolute top-4 right-4 z-20 p-2 rounded-full bg-white/80 hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition-all" onclick="closeProductModal()">
+                        <iconify-icon icon="lucide:x" width="20"></iconify-icon>
+                    </button>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2">
+                        <!-- Left: Image Slider -->
+                        <div class="bg-slate-100 relative h-64 md:h-auto overflow-hidden" id="imageSliderContainer">
+                            <div class="absolute inset-0 flex transition-transform duration-300 ease-out" id="sliderTrack">
+                                <!-- Images will be inserted here dynamically -->
+                            </div>
+                            <!-- Navigation Arrows (hidden if single image) -->
+                            <button type="button" id="prevBtn" class="hidden absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/90 hover:bg-white shadow-lg text-slate-900 items-center justify-center transition-all">
+                                <iconify-icon icon="lucide:chevron-left" width="20"></iconify-icon>
+                            </button>
+                            <button type="button" id="nextBtn" class="hidden absolute right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/90 hover:bg-white shadow-lg text-slate-900 items-center justify-center transition-all">
+                                <iconify-icon icon="lucide:chevron-right" width="20"></iconify-icon>
+                            </button>
+                            <!-- Dot Indicators (hidden if single image) -->
+                            <div id="dotIndicators" class="hidden absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10">
+                                <!-- Dots will be inserted here dynamically -->
+                            </div>
+                        </div>
+                        
+                        <!-- Right: Content -->
+                        <div class="p-8 md:p-10 flex flex-col h-full">
+                            <div class="flex-1">
+                                <span class="text-orange-600 font-bold tracking-wider text-[10px] uppercase mb-2 block">Detail Produk</span>
+                                <h3 class="text-3xl font-bold text-slate-900 mb-2 tracking-tight" id="modalTitle">Product Name</h3>
+                                <p class="text-lg font-semibold text-slate-900 mb-6" id="modalPrice">Rp 0</p>
+                                
+                                <div class="space-y-6">
+                                    <div>
+                                        <h4 class="text-xs font-bold uppercase text-slate-400 mb-2">Deskripsi</h4>
+                                        <p class="text-slate-600 text-sm leading-relaxed" id="modalDesc">Description goes here.</p>
+                                    </div>
+                                    
+                                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                                        <div class="flex items-start gap-3">
+                                            <iconify-icon icon="lucide:info" class="text-slate-400 mt-0.5 shrink-0"></iconify-icon>
+                                            <p class="text-xs text-slate-500">Harga dapat berubah tergantung jumlah pesanan (Quantity) dan kompleksitas desain. Konsultasikan untuk penawaran terbaik.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-8 pt-8 border-t border-slate-100">
+                                <a id="whatsappBtn" href="#" target="_blank" class="flex items-center justify-center gap-2 w-full py-4 bg-slate-900 text-white font-bold rounded-xl hover:bg-orange-600 transition-all shadow-lg hover:shadow-orange-500/25">
+                                    <iconify-icon icon="lucide:message-circle" width="18"></iconify-icon>
+                                    Pesan Sekarang via WhatsApp
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Minimal Footer (Consistent) -->
+    <footer class="bg-white border-t border-slate-200 pt-16 pb-8 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12 mb-16">
+            <div class="max-w-sm">
+                <div class="flex items-center gap-2 mb-6">
+                    <img src="assets/Asli.png" alt="TEFA Logo" class="h-6 w-auto object-contain">
+                    <span class="font-bold tracking-tight text-slate-900">TEFA SMKN 40 JKT</span>
+                </div>
+                <p class="text-sm text-slate-500 leading-relaxed mb-6">
+                    Jl. Nanas II, Utan Kayu Utara, Matraman, Jakarta Timur.<br>
+                    Mencetak masa depan dengan kualitas dan integritas.
+                </p>
+                <div class="flex gap-4">
+                    <a href="https://www.instagram.com/tefafourty.official?igsh=bmgzamZ3bW16c2Z3" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-slate-900 hover:text-white transition-colors"><iconify-icon icon="lucide:instagram" width="16"></iconify-icon></a>
+                    <a href="mailto:tefa40@smkn40jkt.sch.id" class="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-slate-900 hover:text-white transition-colors"><iconify-icon icon="lucide:mail" width="16"></iconify-icon></a>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-12">
+                <div>
+                    <h4 class="font-bold text-slate-900 mb-4 text-sm">Sitemap</h4>
+                    <ul class="space-y-2 text-sm text-slate-500">
+                        <li><a href="index.html" class="hover:text-orange-600">Beranda</a></li>
+                        <li><a href="index.html#about" class="hover:text-orange-600">Tentang</a></li>
+                        <li><a href="katalog.html" class="hover:text-orange-600">Katalog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-slate-900 mb-4 text-sm">Legal</h4>
+                    <ul class="space-y-2 text-sm text-slate-500">
+                        <li><a href="#" class="hover:text-orange-600">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-orange-600">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto border-t border-slate-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400">
+            <p>© 2026 Teaching Factory SMKN 40 Jakarta.</p>
+            <p>Created by <span class="text-slate-600 font-medium">Chika Indira Putri</span> & <span class="text-slate-600 font-medium">Melvin Pidiandra Putra</span></p>
+        </div>
+    </footer>
+
+    <!-- Scripts for Interactivity -->
+    <script>
+        // Filter Logic
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const productCards = document.querySelectorAll('.product-card');
+        const emptyState = document.getElementById('emptyState');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all
+                filterBtns.forEach(b => {
+                    b.classList.remove('bg-slate-900', 'text-white', 'border-slate-900', 'shadow-lg', 'hover:text-white');
+                    b.classList.add('bg-white', 'text-slate-600', 'border-slate-200', 'hover:text-slate-900');
+                });
+                
+                // Add active class to clicked
+                btn.classList.remove('bg-white', 'text-slate-600', 'border-slate-200', 'hover:text-slate-900');
+                btn.classList.add('bg-slate-900', 'text-white', 'border-slate-900', 'shadow-lg', 'hover:text-white');
+
+                const filterValue = btn.getAttribute('data-filter');
+                let hasVisibleItems = false;
+
+                productCards.forEach(card => {
+                    if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
+                        card.style.display = 'block';
+                        hasVisibleItems = true;
+                        // Add fade in animation
+                        card.animate([
+                            { opacity: 0, transform: 'scale(0.95)' },
+                            { opacity: 1, transform: 'scale(1)' }
+                        ], { duration: 300, easing: 'ease-out' });
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                if (!hasVisibleItems) {
+                    emptyState.classList.remove('hidden');
+                } else {
+                    emptyState.classList.add('hidden');
+                }
+            });
+        });
+
+        // Modal Logic with Slider
+        const modal = document.getElementById('productModal');
+        const modalBackdrop = document.getElementById('modalBackdrop');
+        const modalPanel = document.getElementById('modalPanel');
+        let currentSlide = 0;
+        let totalSlides = 0;
+        
+        function openProductModal(title, desc, imgOrArray, price) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalDesc').innerText = desc;
+            document.getElementById('modalPrice').innerText = price;
+            
+            // Handle single image or array of images
+            const images = Array.isArray(imgOrArray) ? imgOrArray : [imgOrArray];
+            totalSlides = images.length;
+            currentSlide = 0;
+            
+            // Build slider track
+            const sliderTrack = document.getElementById('sliderTrack');
+            sliderTrack.innerHTML = '';
+            images.forEach(imgSrc => {
+                const imgElement = document.createElement('img');
+                imgElement.src = imgSrc;
+                imgElement.alt = title;
+                imgElement.className = 'w-full h-full object-contain flex-shrink-0 p-6';
+                sliderTrack.appendChild(imgElement);
+            });
+            
+            // Show/hide navigation based on image count
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const dotIndicators = document.getElementById('dotIndicators');
+            
+            if (totalSlides > 1) {
+                prevBtn.classList.remove('hidden');
+                prevBtn.classList.add('flex');
+                nextBtn.classList.remove('hidden');
+                nextBtn.classList.add('flex');
+                dotIndicators.classList.remove('hidden');
+                dotIndicators.classList.add('flex');
+                
+                // Build dot indicators
+                dotIndicators.innerHTML = '';
+                for (let i = 0; i < totalSlides; i++) {
+                    const dot = document.createElement('button');
+                    dot.className = 'w-2 h-2 rounded-full transition-all ' + (i === 0 ? 'bg-white w-6' : 'bg-white/50');
+                    dot.onclick = () => goToSlide(i);
+                    dotIndicators.appendChild(dot);
+                }
+            } else {
+                prevBtn.classList.add('hidden');
+                nextBtn.classList.add('hidden');
+                dotIndicators.classList.add('hidden');
+            }
+            
+            // Generate WhatsApp Link
+            const message = `Halo Admin TEFA 40, saya tertarik dengan produk *${title}*. Mohon info lebih lanjut.`;
+            document.getElementById('whatsappBtn').href = `https://wa.me/6285760387066?text=${encodeURIComponent(message)}`;
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modalBackdrop.classList.remove('opacity-0');
+                modalPanel.classList.remove('opacity-0', 'scale-95');
+            }, 10);
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function goToSlide(index) {
+            currentSlide = index;
+            const sliderTrack = document.getElementById('sliderTrack');
+            sliderTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // Update dot indicators
+            const dots = document.getElementById('dotIndicators').children;
+            for (let i = 0; i < dots.length; i++) {
+                if (i === currentSlide) {
+                    dots[i].className = 'w-2 h-2 rounded-full transition-all bg-white w-6';
+                } else {
+                    dots[i].className = 'w-2 h-2 rounded-full transition-all bg-white/50';
+                }
+            }
+        }
+        
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            goToSlide(currentSlide);
+        }
+        
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            goToSlide(currentSlide);
+        }
+        
+        // Attach navigation events
+        document.getElementById('nextBtn').addEventListener('click', nextSlide);
+        document.getElementById('prevBtn').addEventListener('click', prevSlide);
+
+        function closeProductModal() {
+            modalBackdrop.classList.add('opacity-0');
+            modalPanel.classList.add('opacity-0', 'scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+
+        // Close on backdrop click
+        modalBackdrop.addEventListener('click', closeProductModal);
+    </script>
+</body></html>

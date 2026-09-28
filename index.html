@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>TEFA SMKN 40 Jakarta - Creative Production House</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fafafa;
+            overflow-x: hidden;
+        }
+        
+        html {
+            overflow-x: hidden;
+            width: 100%;
+        }
+        
+        /* Splash Screen Styles */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
+            overflow: hidden;
+        }
+        
+        #splash-screen::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(249, 115, 22, 0.1) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+        }
+        
+        #splash-screen.fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .splash-logo {
+            animation: splashAnimation 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            opacity: 0;
+            transform: scale(0.3) rotateY(90deg);
+            position: relative;
+            z-index: 1;
+        }
+        
+        @keyframes splashAnimation {
+            0% {
+                opacity: 0;
+                transform: scale(0.3) rotateY(90deg) translateY(50px);
+            }
+            40% {
+                opacity: 1;
+                transform: scale(1.15) rotateY(-5deg) translateY(-10px);
+            }
+            60% {
+                transform: scale(0.95) rotateY(5deg) translateY(5px);
+            }
+            80% {
+                transform: scale(1.05) rotateY(-2deg) translateY(-3px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotateY(0deg) translateY(0);
+            }
+        }
+        
+        .splash-logo img {
+            max-width: 280px;
+            height: auto;
+            filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.15));
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+        
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .splash-logo::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 120%;
+            height: 120%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.8) 50%, transparent 70%);
+            transform: translate(-50%, -50%) translateX(-100%);
+            animation: shine 2s ease-in-out 0.3s;
+        }
+        
+        @keyframes shine {
+            0% { transform: translate(-50%, -50%) translateX(-100%) rotate(45deg); }
+            100% { transform: translate(-50%, -50%) translateX(200%) rotate(45deg); }
+        }
+        
+        @media (max-width: 640px) {
+            .splash-logo img {
+                max-width: 220px;
+            }
+            #splash-screen::before {
+                width: 400px;
+                height: 400px;
+            }
+        }
+        /* Technical Grid Background - Identitas Desain/Presisi */
+        .bg-grid-pattern {
+            background-image: linear-gradient(to right, #e5e5e5 1px, transparent 1px),
+                              linear-gradient(to bottom, #e5e5e5 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Marquee Animation */
+        .marquee-container { overflow: hidden; white-space: nowrap; }
+        .marquee-content { display: inline-block; animation: marquee 20s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a1a1aa; }
+
+        /* CMYK Dots Identity */
+        .cmyk-dot { height: 6px; width: 6px; border-radius: 50%; display: inline-block; margin-right: 2px; }
+        .c-cyan { background-color: #00FFFF; }
+        .c-magenta { background-color: #FF00FF; }
+        .c-yellow { background-color: #FFFF00; }
+        .c-black { background-color: #000000; }
+        
+        /* Mobile Menu */
+        #mobile-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            opacity: 0;
+        }
+        
+        #mobile-menu.active {
+            max-height: 500px;
+            opacity: 1;
+        }
+    </style>
+    
+    <script>
+        // Splash Screen Logic
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const splashScreen = document.getElementById('splash-screen');
+            const body = document.body;
+            
+            // Prevent scrolling during splash screen
+            body.style.overflow = 'hidden';
+            
+            // Hide splash screen after 2.5 seconds
+            setTimeout(() => {
+                splashScreen.classList.add('fade-out');
+                
+                // Remove from DOM after transition and restore scrolling
+                setTimeout(() => {
+                    splashScreen.remove();
+                    body.style.overflow = '';
+                }, 600);
+            }, 2500);
+            
+            // Mobile Menu Toggle
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuIcon = document.getElementById('menu-icon');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('active');
+                    
+                    // Change icon
+                    if (mobileMenu.classList.contains('active')) {
+                        menuIcon.setAttribute('icon', 'lucide:x');
+                    } else {
+                        menuIcon.setAttribute('icon', 'lucide:menu');
+                    }
+                });
+                
+                // Close menu when clicking menu item
+                const menuLinks = mobileMenu.querySelectorAll('a');
+                menuLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.remove('active');
+                        menuIcon.setAttribute('icon', 'lucide:menu');
+                    });
+                });
+            }
+        });
+    </script>
+</head>
+<body class="bg-grid-pattern text-slate-800 antialiased selection:bg-orange-500 selection:text-white overflow-x-hidden">
+
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+        <div class="splash-logo">
+            <img src="assets/Asli.png" alt="TEFA Forty Logo">
+        </div>
+    </div>
+
+    <!-- Floating Navbar (Modern Pill Style) -->
+    <div class="fixed top-6 left-0 right-0 z-50 flex justify-center px-4">
+        <nav class="bg-white/90 backdrop-blur-xl border border-slate-200/80 rounded-full shadow-xl shadow-slate-200/20 py-3 px-6 md:px-8 flex items-center justify-between gap-8 max-w-5xl w-full transition-all duration-300">
+            <!-- Logo Area -->
+            <a href="#" class="flex items-center gap-2.5 group">
+                <img src="assets/Asli.png" alt="TEFA Logo" class="h-8 w-auto object-contain">
+                <div class="flex flex-col leading-none">
+                    <span class="text-xs font-bold tracking-wide text-slate-900">TEFA FOURTY</span>
+                    <span class="text-[10px] text-slate-500 font-medium tracking-widest uppercase">Production House</span>
+                </div>
+            </a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center gap-1 bg-slate-100/50 p-1 rounded-full">
+                <a href="#home" class="px-4 py-1.5 text-xs font-medium text-slate-600 hover:bg-white hover:shadow-sm hover:text-slate-900 rounded-full transition-all">Home</a>
+                <a href="#services" class="px-4 py-1.5 text-xs font-medium text-slate-600 hover:bg-white hover:shadow-sm hover:text-slate-900 rounded-full transition-all">Layanan</a>
+                <a href="#products" class="px-4 py-1.5 text-xs font-medium text-slate-600 hover:bg-white hover:shadow-sm hover:text-slate-900 rounded-full transition-all">Katalog</a>
+                <a href="#about" class="px-4 py-1.5 text-xs font-medium text-slate-600 hover:bg-white hover:shadow-sm hover:text-slate-900 rounded-full transition-all">Tentang</a>
+            </div>
+
+            <!-- Action -->
+            <div class="flex items-center gap-3">
+                <a href="#contact" class="hidden sm:flex items-center gap-2 px-5 py-2 text-xs font-semibold text-white bg-slate-900 rounded-full hover:bg-orange-600 transition-colors duration-300">
+                    <span>Pesan Sekarang</span>
+                    <iconify-icon icon="lucide:arrow-right" width="14"></iconify-icon>
+                </a>
+                <button id="mobile-menu-btn" class="md:hidden p-2 text-slate-900 bg-slate-100 rounded-full hover:bg-slate-200 transition-colors">
+                    <iconify-icon id="menu-icon" icon="lucide:menu" width="20"></iconify-icon>
+                </button>
+            </div>
+        </nav>
+    </div>
+    
+    <!-- Mobile Menu Dropdown -->
+    <div id="mobile-menu" class="md:hidden fixed top-24 left-4 right-4 z-40 bg-white/95 backdrop-blur-xl border border-slate-200/80 rounded-2xl shadow-xl">
+        <div class="flex flex-col p-2">
+            <a href="#home" class="px-5 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-all">Home</a>
+            <a href="#services" class="px-5 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-all">Layanan</a>
+            <a href="#products" class="px-5 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-all">Katalog</a>
+            <a href="#about" class="px-5 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-all">Tentang</a>
+            <div class="border-t border-slate-200 my-1"></div>
+            <a href="#contact" class="px-5 py-3 text-sm font-semibold text-slate-900 hover:text-orange-600 transition-all">Pesan Sekarang</a>
+        </div>
+    </div>
+
+    <!-- Hero Section with Iconic Typography -->
+    <section id="home" class="relative pt-40 pb-20 lg:pt-52 lg:pb-32 px-6">
+        <div class="max-w-6xl mx-auto text-center relative z-10">
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm text-[10px] font-bold tracking-wider uppercase text-slate-500 mb-8 fade-in-up">
+                <span class="flex h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                SMKN 40 Jakarta Official Production Unit
+            </div>
+
+            <!-- Main Title -->
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-slate-900 mb-8 leading-[0.9] fade-in-up delay-100">
+                Visual.<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">Impact.</span><br>
+                Production.
+            </h1>
+
+            <p class="text-lg text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed fade-in-up delay-200">
+                Pusat layanan desain grafis dan percetakan digital berbasis industri. 
+                Menggabungkan kreativitas siswa dengan standar kualitas profesional.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 fade-in-up delay-300">
+                <a href="#products" class="group relative px-8 py-4 bg-slate-900 text-white text-sm font-semibold rounded-full overflow-hidden transition-all hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/20">
+                    <span class="relative z-10 flex items-center gap-2">
+                        Lihat Katalog Produk
+                        <iconify-icon icon="lucide:arrow-down-right" width="16" class="group-hover:translate-x-1 transition-transform"></iconify-icon>
+                    </span>
+                    <div class="absolute inset-0 bg-gradient-to-r from-orange-600 to-orange-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </a>
+                <a href="#contact" class="px-8 py-4 bg-white border border-slate-200 text-slate-900 text-sm font-semibold rounded-full hover:border-slate-400 transition-all hover:bg-slate-50">
+                    Hubungi Admin
+                </a>
+            </div>
+
+            <!-- Abstract Decoration -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 w-[800px] h-[800px] bg-gradient-to-tr from-orange-200/40 via-purple-100/40 to-blue-100/40 blur-[100px] rounded-full pointer-events-none"></div>
+        </div>
+
+        <!-- Floating Showcase Element -->
+        <div class="mt-20 max-w-5xl mx-auto fade-in-up delay-300">
+            <div class="relative bg-white/50 backdrop-blur-sm border border-white/60 p-2 rounded-2xl shadow-2xl shadow-slate-200/50">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    <div class="aspect-[4/3] rounded-xl bg-slate-100 overflow-hidden relative group">
+                        <img src="assets/galeri-produk/bantal/produk-desain.png" class="w-full h-full object-contain p-4 transition-transform duration-700 group-hover:scale-105 grayscale group-hover:grayscale-0" alt="Bantal Custom">
+                        <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
+                    </div>
+                    <div class="aspect-[4/3] rounded-xl bg-slate-100 overflow-hidden relative group">
+                        <img src="assets/galeri-produk/payung/produk-desain.png" class="w-full h-full object-contain p-4 transition-transform duration-700 group-hover:scale-105 grayscale group-hover:grayscale-0" alt="Payung Custom">
+                    </div>
+                    <div class="aspect-[4/3] rounded-xl bg-slate-100 overflow-hidden relative group">
+                        <img src="assets/galeri-produk/totebag/produk-desain.png" class="w-full h-full object-contain p-4 transition-transform duration-700 group-hover:scale-105 grayscale group-hover:grayscale-0" alt="Totebag Custom">
+                    </div>
+                    <div class="aspect-[4/3] rounded-xl bg-slate-100 overflow-hidden relative group flex items-center justify-center border border-dashed border-slate-300">
+                        <div class="text-center">
+                        <img src="assets/galeri-produk/kaos/Desain utama kaos.png" class="w-full h-full object-contain p-4 transition-transform duration-700 group-hover:scale-105 grayscale group-hover:grayscale-0" alt="Totebag Custom">
+                    </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Decorative Registration Marks -->
+                <div class="absolute -top-1 -left-1 w-3 h-3 border-t border-l border-slate-900"></div>
+                <div class="absolute -top-1 -right-1 w-3 h-3 border-t border-r border-slate-900"></div>
+                <div class="absolute -bottom-1 -left-1 w-3 h-3 border-b border-l border-slate-900"></div>
+                <div class="absolute -bottom-1 -right-1 w-3 h-3 border-b border-r border-slate-900"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Running Marquee (Production Line Feel) -->
+    <div class="bg-slate-900 text-white py-4 border-y border-slate-800 relative z-20 marquee-container rotate-1 sm:rotate-1 scale-105 shadow-xl">
+        <div class="marquee-content font-bold tracking-tight text-xl md:text-2xl uppercase opacity-80">
+            <span class="mx-6">Creative Design</span>•<span class="mx-6 text-orange-500">Digital Printing</span>•<span class="mx-6">Merchandise</span>•<span class="mx-6">Sablon DTF</span>•<span class="mx-6">Branding Identity</span>•<span class="mx-6 text-orange-500">High Quality</span>•<span class="mx-6">TEFA SMKN 40</span>•
+             <span class="mx-6">Creative Design</span>•<span class="mx-6 text-orange-500">Digital Printing</span>•<span class="mx-6">Merchandise</span>•<span class="mx-6">Sablon DTF</span>•<span class="mx-6">Branding Identity</span>•<span class="mx-6 text-orange-500">High Quality</span>•<span class="mx-6">TEFA SMKN 40</span>•
+        </div>
+    </div>
+
+    <!-- Services Bento Grid -->
+    <section id="services" class="py-24 px-6 relative">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-bold tracking-tighter text-slate-900 mb-2">Layanan Produksi</h2>
+                    <div class="flex items-center gap-1">
+                        <span class="cmyk-dot c-cyan"></span>
+                        <span class="cmyk-dot c-magenta"></span>
+                        <span class="cmyk-dot c-yellow"></span>
+                        <span class="cmyk-dot c-black"></span>
+                        <span class="text-xs font-mono text-slate-400 ml-2">CMYK PROCESSED</span>
+                    </div>
+                </div>
+                <p class="text-slate-500 max-w-xs text-sm text-right md:text-right">
+                    Solusi *end-to-end* dari konsep visual hingga produk fisik siap pakai.
+                </p>
+            </div>
+
+            <!-- Bento Layout -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[240px]">
+                
+                <!-- Box 1: Large Feature (Design) -->
+                <div class="md:col-span-2 group relative p-8 rounded-3xl bg-white border border-slate-200 overflow-hidden hover:shadow-xl hover:shadow-purple-500/5 transition-all duration-500">
+                    <div class="absolute top-0 right-0 p-32 bg-purple-50 rounded-full blur-3xl opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="relative z-10 h-full flex flex-col justify-between">
+                        <div class="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center mb-4">
+                            <iconify-icon icon="lucide:pen-tool" width="24"></iconify-icon>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-slate-900 mb-2">Desain Grafis & Branding</h3>
+                            <p class="text-slate-500 max-w-sm">Jasa desain profesional untuk logo, kemasan, media sosial, dan identitas visual perusahaan Anda.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Box 2: Vertical Feature (Print) -->
+                <div class="md:row-span-2 group relative p-8 rounded-3xl bg-slate-900 text-white overflow-hidden hover:shadow-xl hover:shadow-orange-500/10 transition-all duration-500">
+                    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
+                    <div class="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-orange-600/20 to-transparent"></div>
+                    
+                    <div class="relative z-10 h-full flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-2xl bg-orange-500 text-white flex items-center justify-center mb-6">
+                                <iconify-icon icon="lucide:printer" width="24"></iconify-icon>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-2">Digital Printing <br>A3+ & Large Format</h3>
+                        </div>
+                        <div class="space-y-4">
+                            <p class="text-slate-400 text-sm">Cetak berkualitas tinggi dengan mesin produksi terbaru:</p>
+                            <ul class="text-sm space-y-2 text-slate-300">
+                                <li class="flex items-center gap-2"><iconify-icon icon="lucide:check" class="text-orange-500"></iconify-icon> Sticker Vinyl & Kromo</li>
+                                <li class="flex items-center gap-2"><iconify-icon icon="lucide:check" class="text-orange-500"></iconify-icon> Brosur & Flyer</li>
+                                <li class="flex items-center gap-2"><iconify-icon icon="lucide:check" class="text-orange-500"></iconify-icon> Banner & X-Banner</li>
+                                <li class="flex items-center gap-2"><iconify-icon icon="lucide:check" class="text-orange-500"></iconify-icon> Kartu Nama Premium</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Box 3: Standard (Merch) -->
+                <div class="group relative p-8 rounded-3xl bg-white border border-slate-200 overflow-hidden hover:shadow-xl hover:shadow-blue-500/5 transition-all duration-500">
+                    <div class="relative z-10 h-full flex flex-col justify-between">
+                        <div class="w-12 h-12 rounded-2xl bg-white border border-slate-200 text-slate-900 flex items-center justify-center mb-4">
+                            <iconify-icon icon="lucide:shirt" width="24"></iconify-icon>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-1">Textile & Apparel</h3>
+                            <p class="text-sm text-slate-500">Sablon DTF, Kaos, Jersey Sublim, Hoodie.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Box 4: Standard (Souvenir) -->
+                <div class="group relative p-8 rounded-3xl bg-white border border-slate-200 overflow-hidden hover:shadow-xl hover:shadow-green-500/5 transition-all duration-500">
+                    <div class="relative z-10 h-full flex flex-col justify-between">
+                        <div class="w-12 h-12 rounded-2xl bg-white border border-slate-200 text-slate-900 flex items-center justify-center mb-4">
+                            <iconify-icon icon="lucide:gift" width="24"></iconify-icon>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-1">Merchandise</h3>
+                            <p class="text-sm text-slate-500">Mug, Tumbler, Pin, Gantungan Kunci, ID Card.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Showcase (Iconic Cards) -->
+    <section id="products" class="py-24 bg-white border-y border-slate-100">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="text-orange-600 font-bold tracking-widest text-xs uppercase mb-2 block">Katalog Unggulan</span>
+                <h2 class="text-4xl font-bold tracking-tighter text-slate-900">Featured Products</h2>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10">
+                <!-- Item 1 -->
+                <div class="group cursor-pointer">
+                    <div class="aspect-[1/1.1] rounded-2xl bg-slate-100 relative overflow-hidden mb-4">
+                        <img src="assets/galeri-produk/kaos/Desain utama kaos.png" alt="Kaos Kemerdekaan" class="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105 p-4">
+                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">Best Seller</div>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 leading-tight group-hover:text-orange-600 transition-colors">Kaos Kemerdakaan</h3>
+                    <p class="text-sm text-slate-500 mt-1">Desain Custom • Bahan Premium</p>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="group cursor-pointer">
+                    <div class="aspect-[1/1.1] rounded-2xl bg-slate-100 relative overflow-hidden mb-4">
+                        <img src="assets/card-emoney/card-desain.png" alt="Card E-Money" class="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105 p-4">
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 leading-tight group-hover:text-orange-600 transition-colors">Card E-money Custom</h3>
+                    <p class="text-sm text-slate-500 mt-1">Desain Custom • Premium Quality</p>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="group cursor-pointer">
+                    <div class="aspect-[1/1.1] rounded-2xl bg-slate-100 relative overflow-hidden mb-4">
+                        <img src="assets/galeri-produk/bantal/produk-desain.png" alt="Bantal" class="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105 p-4">
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 leading-tight group-hover:text-orange-600 transition-colors">Bantal Custom</h3>
+                    <p class="text-sm text-slate-500 mt-1">Full Printing • Bahan Lembut</p>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="group cursor-pointer">
+                    <div class="aspect-[1/1.1] rounded-2xl bg-slate-100 relative overflow-hidden mb-4">
+                        <img src="assets/galeri-produk/payung/produk-desain.png" alt="Payung" class="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105 p-4">
+                        <div class="absolute top-3 left-3 bg-slate-900 text-white px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">Promo</div>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 leading-tight group-hover:text-orange-600 transition-colors">Payung Custom</h3>
+                    <p class="text-sm text-slate-500 mt-1">Lipat Otomatis • Desain Custom</p>
+                </div>
+
+                 <!-- Item 5 -->
+                 <div class="group cursor-pointer">
+                    <div class="aspect-[1/1.1] rounded-2xl bg-slate-100 relative overflow-hidden mb-4">
+                        <img src="assets/galeri-produk/totebag/produk-desain.png" alt="Totebag" class="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105 p-4">
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 leading-tight group-hover:text-orange-600 transition-colors">Totebag Custom</h3>
+                    <p class="text-sm text-slate-500 mt-1">Kanvas Premium • Eco Friendly</p>
+                </div>
+            </div>
+            
+            <div class="mt-16 text-center">
+                <a href="katalog.html" class="inline-flex items-center gap-2 text-sm font-semibold border-b border-slate-900 pb-0.5 hover:text-orange-600 hover:border-orange-600 transition-colors">
+                    Beli Sekarang! 
+                    <iconify-icon icon="lucide:arrow-right" width="16"></iconify-icon>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Us (Grid Text) -->
+    <section id="about" class="py-24 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="text-4xl font-bold tracking-tighter text-slate-900 mb-6">Mengapa TEFA 40?</h2>
+                    <div class="space-y-8">
+                        <div class="flex gap-4">
+                            <div class="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center shrink-0">
+                                <iconify-icon icon="lucide:zap" width="20"></iconify-icon>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900">Kecepatan Industri</h4>
+                                <p class="text-sm text-slate-500 mt-1 leading-relaxed">Proses produksi yang terstandarisasi untuk memastikan ketepatan waktu pengiriman tanpa mengurangi kualitas.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                                <iconify-icon icon="lucide:users" width="20"></iconify-icon>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900">Kreativitas Generasi Muda</h4>
+                                <p class="text-sm text-slate-500 mt-1 leading-relaxed">Dikerjakan oleh talenta muda SMKN 40 dengan bimbingan praktisi ahli, menghasilkan ide-ide segar.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="w-10 h-10 rounded-full bg-slate-100 text-slate-900 flex items-center justify-center shrink-0">
+                                <iconify-icon icon="lucide:wallet" width="20"></iconify-icon>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900">Harga Kompetitif</h4>
+                                <p class="text-sm text-slate-500 mt-1 leading-relaxed">Solusi terbaik untuk budget pelajar, UMKM, maupun korporat dengan transparansi biaya.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="aspect-square bg-slate-900 rounded-3xl p-8 flex flex-col justify-between text-white relative overflow-hidden">
+                        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                        <div class="relative z-10">
+                            <iconify-icon icon="lucide:quote" width="40" class="text-orange-500 mb-6"></iconify-icon>
+                            <p class="text-xl md:text-2xl font-medium tracking-tight leading-normal">
+                                "Teaching Factory SMKN 40 bukan sekadar tempat belajar, tapi jembatan nyata antara edukasi dan industri kreatif profesional."
+                            </p>
+                        </div>
+                        <div class="relative z-10 flex items-center gap-3">
+                            <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center font-bold">40</div>
+                            <div>
+                                <p class="font-bold text-sm">Kepala Program</p>
+                                <p class="text-xs text-slate-400">DKV & Percetakan</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Decor -->
+                    <div class="absolute -z-10 -bottom-6 -right-6 w-full h-full rounded-3xl border-2 border-slate-200"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action (Modern Ticket Style) -->
+    <section id="contact" class="py-24 px-6">
+        <div class="max-w-4xl mx-auto">
+            <div class="relative bg-slate-900 rounded-[2.5rem] p-10 md:p-16 overflow-hidden text-center">
+                <!-- Ticket Cutouts -->
+                <div class="absolute top-1/2 -left-6 w-12 h-12 bg-[#fafafa] rounded-full"></div>
+                <div class="absolute top-1/2 -right-6 w-12 h-12 bg-[#fafafa] rounded-full"></div>
+                
+                <div class="relative z-10">
+                    <h2 class="text-3xl md:text-5xl font-bold tracking-tighter text-white mb-6">Siap Mencetak Ide Anda?</h2>
+                    <p class="text-slate-400 mb-10 max-w-lg mx-auto">Konsultasikan kebutuhan desain dan cetak Anda sekarang. Dapatkan penawaran spesial untuk pesanan dalam jumlah besar.</p>
+                    
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <a href="https://wa.me/6285760387066?text=Halo%20Admin%20TEFA%2040%2C%20saya%20ingin%20konsultasi%20tentang%20produk%20dan%20layanan%20Anda." target="_blank" class="w-full sm:w-auto px-8 py-4 bg-orange-500 text-white font-bold rounded-xl hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/25 flex items-center justify-center gap-2">
+                            <iconify-icon icon="lucide:message-circle" width="18"></iconify-icon>
+                            Chat WhatsApp
+                        </a>
+                        <a href="mailto:tefa40@smkn40jkt.sch.id" class="w-full sm:w-auto px-8 py-4 bg-transparent border border-slate-700 text-white font-bold rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center gap-2">
+                            Kirim Email
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Background Glow -->
+                <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-orange-600/20 via-transparent to-purple-600/20 pointer-events-none"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Minimal Footer -->
+    <footer class="bg-white border-t border-slate-200 pt-16 pb-8 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12 mb-16">
+            <div class="max-w-sm">
+                <div class="flex items-center gap-2 mb-6">
+                    <img src="assets/Asli.png" alt="TEFA Logo" class="h-8 w-auto object-contain">
+                    <span class="font-bold tracking-tight text-slate-900">TEFA SMKN 40 JKT</span>
+                </div>
+                <p class="text-sm text-slate-500 leading-relaxed mb-6">
+                    Jl. Nanas II, Utan Kayu Utara, Matraman, Jakarta Timur.<br>
+                    Mencetak masa depan dengan kualitas dan integritas.
+                </p>
+                <div class="flex gap-4">
+                    <a href="https://www.instagram.com/tefafourty.official?igsh=bmgzamZ3bW16c2Z3" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-slate-900 hover:text-white transition-colors"><iconify-icon icon="lucide:instagram" width="16"></iconify-icon></a>
+                    <a href="mailto:tefa40@smkn40jkt.sch.id" class="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-slate-900 hover:text-white transition-colors"><iconify-icon icon="lucide:mail" width="16"></iconify-icon></a>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-12">
+                <div>
+                    <h4 class="font-bold text-slate-900 mb-4 text-sm">Sitemap</h4>
+                    <ul class="space-y-2 text-sm text-slate-500">
+                        <li><a href="#home" class="hover:text-orange-600">Beranda</a></li>
+                        <li><a href="#about" class="hover:text-orange-600">Tentang</a></li>
+                        <li><a href="#products" class="hover:text-orange-600">Katalog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-slate-900 mb-4 text-sm">Legal</h4>
+                    <ul class="space-y-2 text-sm text-slate-500">
+                        <li><a href="#" class="hover:text-orange-600">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-orange-600">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto border-t border-slate-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400">
+            <p>© 2026 Teaching Factory SMKN 40 Jakarta.</p>
+            <p>Created by <span class="text-slate-600 font-medium">Chika Indira Putri</span> & <span class="text-slate-600 font-medium">Melvin Pidiandra Putra</span></p>
+        </div>
+    </footer>
+
+</body>
+</html>
