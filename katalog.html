@@ -9,6 +9,9 @@ body {
 font-family: 'Inter', sans-serif;
 background-color: #fafafa;
 }
+html {
+    overflow-x: hidden;
+}
 /* Technical Grid Background */
 .bg-grid-pattern {
 background-image: linear-gradient(to right, #e5e5e5 1px, transparent 1px),
@@ -38,13 +41,31 @@ background-size: 40px 40px;
     transform: scale(0.95);
     transition: opacity 200ms ease-in, transform 200ms ease-in;
 }
+/* Mobile navigation: kept outside the rounded navbar so it remains tappable. */
+#mobile-menu {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: max-height 280ms ease, opacity 200ms ease, transform 280ms ease, visibility 280ms;
+}
+#mobile-menu.active {
+    max-height: 360px;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
 </style>
 </head>
 <body class="bg-grid-pattern text-slate-800 antialiased selection:bg-orange-200 selection:text-slate-900 overflow-x-hidden">
 
     <!-- Floating Navbar (Consistent) -->
-    <div class="fixed top-6 left-0 right-0 z-40 flex justify-center px-4">
-        <nav class="bg-white/90 backdrop-blur-xl border border-slate-200/80 rounded-full shadow-xl shadow-slate-200/20 py-3 px-6 md:px-8 flex items-center justify-between gap-8 max-w-5xl w-full transition-all duration-300">
+    <div class="fixed top-4 sm:top-6 left-0 right-0 z-40 flex justify-center px-3 sm:px-4">
+        <nav class="bg-white/90 backdrop-blur-xl border border-slate-200/80 rounded-full shadow-xl shadow-slate-200/20 py-2.5 px-4 sm:px-6 md:px-8 flex items-center justify-between gap-3 sm:gap-8 max-w-5xl w-full transition-all duration-300">
             <!-- Logo Area -->
             <a href="index.html" class="flex items-center gap-2.5 group">
                 <img src="assets/Asli.png" alt="TEFA Logo" class="h-8 w-auto object-contain">
@@ -65,14 +86,25 @@ background-size: 40px 40px;
             <!-- Action -->
             <div class="flex items-center gap-3">
                 <div class="relative hidden sm:block">
-                    <input type="text" placeholder="Cari produk..." class="pl-8 pr-4 py-1.5 bg-slate-100 rounded-full text-xs focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:bg-white transition-all w-32 focus:w-48 border border-transparent focus:border-orange-200">
+                    <input id="productSearch" type="search" placeholder="Cari produk..." aria-label="Cari produk" class="pl-8 pr-4 py-1.5 bg-slate-100 rounded-full text-xs focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:bg-white transition-all w-32 focus:w-48 border border-transparent focus:border-orange-200">
                     <iconify-icon icon="lucide:search" class="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" width="12"></iconify-icon>
                 </div>
-                <button class="md:hidden p-2 text-slate-900 bg-slate-100 rounded-full">
-                    <iconify-icon icon="lucide:menu" width="20"></iconify-icon>
+                <button id="mobile-menu-btn" type="button" aria-label="Buka menu navigasi" aria-controls="mobile-menu" aria-expanded="false" class="md:hidden p-2 text-slate-900 bg-slate-100 rounded-full hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-500/40 transition-colors">
+                    <iconify-icon id="menu-icon" icon="lucide:menu" width="20"></iconify-icon>
                 </button>
             </div>
         </nav>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden fixed top-20 sm:top-24 left-3 right-3 z-30 bg-white/95 backdrop-blur-xl border border-slate-200/80 rounded-2xl shadow-xl shadow-slate-900/10" aria-hidden="true">
+        <div class="p-2 space-y-1">
+            <a href="index.html" class="mobile-menu-link flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-100"><iconify-icon icon="lucide:house" width="17"></iconify-icon>Beranda</a>
+            <a href="index.html#services" class="mobile-menu-link flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-100"><iconify-icon icon="lucide:layers-3" width="17"></iconify-icon>Layanan</a>
+            <a href="katalog.html" aria-current="page" class="mobile-menu-link flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-white bg-slate-900"><iconify-icon icon="lucide:grid-2x2" width="17"></iconify-icon>Katalog Produk</a>
+            <a href="index.html#about" class="mobile-menu-link flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-100"><iconify-icon icon="lucide:circle-help" width="17"></iconify-icon>Tentang TEFA</a>
+            <a href="index.html#contact" class="mobile-menu-link flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-orange-700 bg-orange-50 hover:bg-orange-100"><iconify-icon icon="lucide:message-circle" width="17"></iconify-icon>Pesan Sekarang</a>
+        </div>
     </div>
 
     <!-- Page Header -->
@@ -98,26 +130,17 @@ background-size: 40px 40px;
                         Semua
                     </button>
                     <!-- Filter Item: Inactive -->
-                    <button class="filter-btn shrink-0 px-5 py-2 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:text-slate-900 transition-all" data-filter="tshirt">
+                    <button class="filter-btn shrink-0 px-5 py-2 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:text-slate-900 transition-all" data-filter="apparel">
                         T-Shirt
                     </button>
-                    <button class="filter-btn shrink-0 px-5 py-2 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:text-slate-900 transition-all" data-filter="mug">
-                        Mug
+                    <button class="filter-btn shrink-0 px-5 py-2 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:text-slate-900 transition-all" data-filter="card">
+                        Kartu Custom
                     </button>
-                    <button class="filter-btn shrink-0 px-5 py-2 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:text-slate-900 transition-all" data-filter="tumbler">
-                        Tumbler
+                    <button class="filter-btn shrink-0 px-5 py-2 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:text-slate-900 transition-all" data-filter="home">
+                        Home Living
                     </button>
-                    <button class="filter-btn shrink-0 px-5 py-2 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:text-slate-900 transition-all" data-filter="sticker">
-                        Sticker
-                    </button>
-                    <button class="filter-btn shrink-0 px-5 py-2 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:text-slate-900 transition-all" data-filter="jersey">
-                        Jersey
-                    </button>
-                    <button class="filter-btn shrink-0 px-5 py-2 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:text-slate-900 transition-all" data-filter="print">
-                        Printing
-                    </button>
-                    <button class="filter-btn shrink-0 px-5 py-2 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:text-slate-900 transition-all" data-filter="design">
-                        Desain
+                    <button class="filter-btn shrink-0 px-5 py-2 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:text-slate-900 transition-all" data-filter="bag">
+                        Tote Bag
                     </button>
                 </div>
             </div>
@@ -126,7 +149,7 @@ background-size: 40px 40px;
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10" id="productGrid">
                 
                 <!-- Product 0: Kaos Kemerdekaan -->
-                <div class="group cursor-pointer product-card" data-category="T-Shirt" onclick="openProductModal('Kaos Kemerdekaan', 'Kaos kemerdekaan dengan desain custom berkualitas premium. Cocok untuk memeriahkan hari kemerdekaan.', ['assets/galeri-produk/kaos/Desain utama kaos.png', 'assets/galeri-produk/kaos/Desain utama kaos.png', 'assets/galeri-produk/kaos/Desain utama.png'], 'Mulai Rp 35.000')">
+                <div class="group cursor-pointer product-card" data-category="apparel" onclick="openProductModal('Kaos Kemerdekaan', 'Kaos kemerdekaan dengan desain custom berkualitas premium. Cocok untuk memeriahkan hari kemerdekaan.', ['assets/galeri-produk/kaos/Desain utama kaos.png'], 'Mulai Rp 35.000')">
                     <div class="aspect-[1/1.1] rounded-2xl bg-slate-100 relative overflow-hidden mb-4 border border-slate-100">
                         <img src="assets/galeri-produk/kaos/Desain utama kaos.png" alt="Card E-Money Custom" class="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105 p-4">
                         <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider text-slate-900 shadow-sm">Best Seller</div>
@@ -136,7 +159,7 @@ background-size: 40px 40px;
                 </div>
                                 
                 <!-- Product 1: Card E-Money -->
-                <div class="group cursor-pointer product-card" data-category="print" onclick="openProductModal('Card E-Money Custom', 'Card e-money dengan desain custom berkualitas premium. Cocok untuk souvenir perusahaan, event, atau merchandise.', ['assets/card-emoney/card-desain.png', 'assets/card-emoney/card-desain2.png', 'assets/card-emoney/card-desain3.png', 'assets/card-emoney/card-desain4.png'], 'Mulai Rp 12.000')">
+                <div class="group cursor-pointer product-card" data-category="card" onclick="openProductModal('Card E-Money Custom', 'Card e-money dengan desain custom berkualitas premium. Cocok untuk souvenir perusahaan, event, atau merchandise.', ['assets/card-emoney/card-desain.png', 'assets/card-emoney/card-desain2.png', 'assets/card-emoney/card-desain3.png', 'assets/card-emoney/card-desain4.png'], 'Mulai Rp 12.000')">
                     <div class="aspect-[1/1.1] rounded-2xl bg-slate-100 relative overflow-hidden mb-4 border border-slate-100">
                         <img src="assets/card-emoney/card-desain.png" alt="Card E-Money Custom" class="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105 p-4">
                         <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider text-slate-900 shadow-sm">Best Seller</div>
@@ -146,7 +169,7 @@ background-size: 40px 40px;
                 </div>
 
                 <!-- Product 2: Bantal Custom -->
-                <div class="group cursor-pointer product-card" data-category="mug" onclick="openProductModal('Bantal Custom Premium', 'Bantal dengan desain custom menggunakan teknik printing berkualitas tinggi. Bahan lembut dan nyaman.', ['assets/galeri-produk/bantal/produk-desain.png', 'assets/galeri-produk/bantal/produk-desain2.png', 'assets/galeri-produk/bantal/produk-desain3.png', 'assets/galeri-produk/bantal/produk-utama.png'], 'Mulai Rp 45.000')">
+                <div class="group cursor-pointer product-card" data-category="home" onclick="openProductModal('Bantal Custom Premium', 'Bantal dengan desain custom menggunakan teknik printing berkualitas tinggi. Bahan lembut dan nyaman.', ['assets/galeri-produk/bantal/produk-desain.png', 'assets/galeri-produk/bantal/produk-desain2.png', 'assets/galeri-produk/bantal/produk-desain3.png', 'assets/galeri-produk/bantal/produk-utama.png'], 'Mulai Rp 45.000')">
                     <div class="aspect-[1/1.1] rounded-2xl bg-slate-100 relative overflow-hidden mb-4 border border-slate-100">
                         <img src="assets/galeri-produk/bantal/produk-desain.png" alt="Bantal Custom" class="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105 p-4">
                     </div>
@@ -155,7 +178,7 @@ background-size: 40px 40px;
                 </div>
 
                 <!-- Product 3: Payung Custom -->
-                <div class="group cursor-pointer product-card" data-category="sticker" onclick="openProductModal('Payung Custom Premium', 'Payung lipat dengan desain custom berkualitas. Tahan lama dan cocok untuk merchandise atau souvenir.', ['assets/galeri-produk/payung/produk-desain.png', 'assets/galeri-produk/payung/product-desaiin-contact.png'], 'Mulai Rp 35.000')">
+                <div class="group cursor-pointer product-card" data-category="home" onclick="openProductModal('Payung Custom Premium', 'Payung lipat dengan desain custom berkualitas. Tahan lama dan cocok untuk merchandise atau souvenir.', ['assets/galeri-produk/payung/produk-desain.png', 'assets/galeri-produk/payung/product-desaiin-contact.png'], 'Mulai Rp 35.000')">
                     <div class="aspect-[1/1.1] rounded-2xl bg-slate-100 relative overflow-hidden mb-4 border border-slate-100">
                         <img src="assets/galeri-produk/payung/produk-desain.png" alt="Payung Custom" class="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105 p-4">
                         <div class="absolute top-3 left-3 bg-slate-900 text-white px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider shadow-sm">Promo</div>
@@ -165,7 +188,7 @@ background-size: 40px 40px;
                 </div>
 
                 <!-- Product 4: Totebag Custom -->
-                <div class="group cursor-pointer product-card" data-category="tumbler" onclick="openProductModal('Totebag Custom Premium', 'Totebag kanvas dengan printing custom berkualitas. Ramah lingkungan dan cocok untuk berbagai acara.', ['assets/galeri-produk/totebag/produk-desain.png', 'assets/galeri-produk/totebag/produk-desain2.png', 'assets/galeri-produk/totebag/produk-desain3.png', 'assets/galeri-produk/totebag/produk-desain4.png'], 'Mulai Rp 25.000')">
+                <div class="group cursor-pointer product-card" data-category="bag" onclick="openProductModal('Totebag Custom Premium', 'Totebag kanvas dengan printing custom berkualitas. Ramah lingkungan dan cocok untuk berbagai acara.', ['assets/galeri-produk/totebag/produk-desain.png', 'assets/galeri-produk/totebag/produk-desain2.png', 'assets/galeri-produk/totebag/produk-desain3.png', 'assets/galeri-produk/totebag/produk-desain4.png'], 'Mulai Rp 25.000')">
                     <div class="aspect-[1/1.1] rounded-2xl bg-slate-100 relative overflow-hidden mb-4 border border-slate-100">
                         <img src="assets/galeri-produk/totebag/produk-desain.png" alt="Totebag Custom" class="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105 p-4">
                     </div>
@@ -174,7 +197,7 @@ background-size: 40px 40px;
                 </div>
 
                 <!-- Product 5: Bantal Dekoratif -->
-                <div class="group cursor-pointer product-card" data-category="jersey" onclick="openProductModal('Bantal Dekoratif Custom', 'Bantal dekoratif dengan desain menarik. Material berkualitas tinggi untuk kenyamanan maksimal.', ['assets/galeri-produk/bantal/produk-desain2.png', 'assets/galeri-produk/bantal/produk-desain.png', 'assets/galeri-produk/bantal/produk-desain3.png', 'assets/galeri-produk/bantal/produk-utama.png'], 'Mulai Rp 50.000')">
+                <div class="group cursor-pointer product-card" data-category="home" onclick="openProductModal('Bantal Dekoratif Custom', 'Bantal dekoratif dengan desain menarik. Material berkualitas tinggi untuk kenyamanan maksimal.', ['assets/galeri-produk/bantal/produk-desain2.png', 'assets/galeri-produk/bantal/produk-desain.png', 'assets/galeri-produk/bantal/produk-desain3.png', 'assets/galeri-produk/bantal/produk-utama.png'], 'Mulai Rp 50.000')">
                     <div class="aspect-[1/1.1] rounded-2xl bg-slate-100 relative overflow-hidden mb-4 border border-slate-100">
                         <img src="assets/galeri-produk/bantal/produk-desain2.png" alt="Bantal Dekoratif" class="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105 p-4">
                     </div>
@@ -183,7 +206,7 @@ background-size: 40px 40px;
                 </div>
 
                 <!-- Product 6: Card E-Money Desain 2 -->
-                <div class="group cursor-pointer product-card" data-category="print" onclick="openProductModal('Card E-Money Premium Design', 'Card e-money dengan desain eksklusif. Kualitas printing tajam dan tahan lama untuk penggunaan jangka panjang.', ['assets/card-emoney/card-desain2.png', 'assets/card-emoney/card-desain.png', 'assets/card-emoney/card-desain3.png', 'assets/card-emoney/card-desain4.png'], 'Mulai Rp 15.000')">
+                <div class="group cursor-pointer product-card" data-category="card" onclick="openProductModal('Card E-Money Premium Design', 'Card e-money dengan desain eksklusif. Kualitas printing tajam dan tahan lama untuk penggunaan jangka panjang.', ['assets/card-emoney/card-desain2.png', 'assets/card-emoney/card-desain.png', 'assets/card-emoney/card-desain3.png', 'assets/card-emoney/card-desain4.png'], 'Mulai Rp 15.000')">
                     <div class="aspect-[1/1.1] rounded-2xl bg-slate-100 relative overflow-hidden mb-4 border border-slate-100">
                         <img src="assets/card-emoney/card-desain2.png" alt="Card E-Money Premium" class="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105 p-4">
                     </div>
@@ -192,7 +215,7 @@ background-size: 40px 40px;
                 </div>
 
                 <!-- Product 7: Bantal Motif -->
-                <div class="group cursor-pointer product-card" data-category="design" onclick="openProductModal('Bantal Custom Motif', 'Bantal dengan motif custom pilihan. Nyaman dan cocok untuk dekorasi rumah atau hadiah spesial.', ['assets/galeri-produk/bantal/produk-desain3.png', 'assets/galeri-produk/bantal/produk-desain.png', 'assets/galeri-produk/bantal/produk-desain2.png', 'assets/galeri-produk/bantal/produk-utama.png'], 'Mulai Rp 48.000')">
+                <div class="group cursor-pointer product-card" data-category="home" onclick="openProductModal('Bantal Custom Motif', 'Bantal dengan motif custom pilihan. Nyaman dan cocok untuk dekorasi rumah atau hadiah spesial.', ['assets/galeri-produk/bantal/produk-desain3.png', 'assets/galeri-produk/bantal/produk-desain.png', 'assets/galeri-produk/bantal/produk-desain2.png', 'assets/galeri-produk/bantal/produk-utama.png'], 'Mulai Rp 48.000')">
                     <div class="aspect-[1/1.1] rounded-2xl bg-slate-100 relative overflow-hidden mb-4 border border-slate-100">
                         <img src="assets/galeri-produk/bantal/produk-desain3.png" alt="Bantal Custom Motif" class="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105 p-4">
                     </div>
@@ -201,7 +224,7 @@ background-size: 40px 40px;
                 </div>
 
                 <!-- Product 8: Totebag Premium -->
-                <div class="group cursor-pointer product-card" data-category="print" onclick="openProductModal('Totebag Premium Design', 'Totebag premium dengan desain custom eksklusif. Bahan kanvas tebal untuk daya tahan maksimal.', ['assets/galeri-produk/totebag/produk-desain2.png', 'assets/galeri-produk/totebag/produk-desain.png', 'assets/galeri-produk/totebag/produk-desain3.png', 'assets/galeri-produk/totebag/produk-desain4.png'], 'Mulai Rp 30.000')">
+                <div class="group cursor-pointer product-card" data-category="bag" onclick="openProductModal('Totebag Premium Design', 'Totebag premium dengan desain custom eksklusif. Bahan kanvas tebal untuk daya tahan maksimal.', ['assets/galeri-produk/totebag/produk-desain2.png', 'assets/galeri-produk/totebag/produk-desain.png', 'assets/galeri-produk/totebag/produk-desain3.png', 'assets/galeri-produk/totebag/produk-desain4.png'], 'Mulai Rp 30.000')">
                     <div class="aspect-[1/1.1] rounded-2xl bg-slate-100 relative overflow-hidden mb-4 border border-slate-100">
                         <img src="assets/galeri-produk/totebag/produk-desain2.png" alt="Totebag Premium" class="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105 p-4">
                         <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider text-slate-900 shadow-sm">Bulk Order</div>
@@ -231,9 +254,9 @@ background-size: 40px 40px;
         <div class="fixed inset-0 z-10 overflow-y-auto">
             <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
                 <!-- Modal Panel -->
-                <div class="relative transform overflow-hidden rounded-3xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-4xl opacity-0 scale-95" id="modalPanel">
+                <div class="relative transform overflow-hidden rounded-3xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-4xl opacity-0 scale-95" id="modalPanel" tabindex="-1">
                     
-                    <button type="button" class="absolute top-4 right-4 z-20 p-2 rounded-full bg-white/80 hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition-all" onclick="closeProductModal()">
+                    <button id="closeModalBtn" type="button" aria-label="Tutup detail produk" class="absolute top-4 right-4 z-20 p-2 rounded-full bg-white/80 hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition-all" onclick="closeProductModal()">
                         <iconify-icon icon="lucide:x" width="20"></iconify-icon>
                     </button>
 
@@ -336,156 +359,176 @@ background-size: 40px 40px;
 
     <!-- Scripts for Interactivity -->
     <script>
-        // Filter Logic
         const filterBtns = document.querySelectorAll('.filter-btn');
         const productCards = document.querySelectorAll('.product-card');
         const emptyState = document.getElementById('emptyState');
+        const searchInput = document.getElementById('productSearch');
+        let activeFilter = 'all';
 
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                // Remove active class from all
-                filterBtns.forEach(b => {
-                    b.classList.remove('bg-slate-900', 'text-white', 'border-slate-900', 'shadow-lg', 'hover:text-white');
-                    b.classList.add('bg-white', 'text-slate-600', 'border-slate-200', 'hover:text-slate-900');
-                });
-                
-                // Add active class to clicked
-                btn.classList.remove('bg-white', 'text-slate-600', 'border-slate-200', 'hover:text-slate-900');
-                btn.classList.add('bg-slate-900', 'text-white', 'border-slate-900', 'shadow-lg', 'hover:text-white');
+        function setActiveFilter(button) {
+            filterBtns.forEach((item) => {
+                const isActive = item === button;
+                item.classList.toggle('bg-slate-900', isActive);
+                item.classList.toggle('text-white', isActive);
+                item.classList.toggle('border-slate-900', isActive);
+                item.classList.toggle('shadow-lg', isActive);
+                item.classList.toggle('hover:text-white', isActive);
+                item.classList.toggle('bg-white', !isActive);
+                item.classList.toggle('text-slate-600', !isActive);
+                item.classList.toggle('border-slate-200', !isActive);
+                item.classList.toggle('hover:text-slate-900', !isActive);
+                item.setAttribute('aria-pressed', String(isActive));
+            });
+        }
 
-                const filterValue = btn.getAttribute('data-filter');
-                let hasVisibleItems = false;
+        function filterProducts(animate = false) {
+            const searchTerm = searchInput ? searchInput.value.trim().toLowerCase() : '';
+            let hasVisibleItems = false;
 
-                productCards.forEach(card => {
-                    if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
-                        card.style.display = 'block';
-                        hasVisibleItems = true;
-                        // Add fade in animation
-                        card.animate([
-                            { opacity: 0, transform: 'scale(0.95)' },
-                            { opacity: 1, transform: 'scale(1)' }
-                        ], { duration: 300, easing: 'ease-out' });
-                    } else {
-                        card.style.display = 'none';
+            productCards.forEach((card) => {
+                const matchesCategory = activeFilter === 'all' || card.dataset.category === activeFilter;
+                const matchesSearch = card.textContent.toLowerCase().includes(searchTerm);
+                const isVisible = matchesCategory && matchesSearch;
+                card.classList.toggle('hidden', !isVisible);
+                if (isVisible) {
+                    hasVisibleItems = true;
+                    if (animate && card.animate) {
+                        card.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 220, easing: 'ease-out' });
                     }
-                });
-
-                if (!hasVisibleItems) {
-                    emptyState.classList.remove('hidden');
-                } else {
-                    emptyState.classList.add('hidden');
                 }
             });
+            emptyState.classList.toggle('hidden', hasVisibleItems);
+        }
+
+        filterBtns.forEach((button) => {
+            button.setAttribute('aria-pressed', String(button.dataset.filter === 'all'));
+            button.addEventListener('click', () => {
+                activeFilter = button.dataset.filter;
+                setActiveFilter(button);
+                filterProducts(true);
+            });
+        });
+        searchInput?.addEventListener('input', () => filterProducts());
+
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+
+        function closeMobileMenu() {
+            if (!mobileMenu || !mobileMenuBtn) return;
+            mobileMenu.classList.remove('active');
+            mobileMenu.setAttribute('aria-hidden', 'true');
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            menuIcon?.setAttribute('icon', 'lucide:menu');
+        }
+
+        mobileMenuBtn?.addEventListener('click', () => {
+            const isOpen = mobileMenu.classList.toggle('active');
+            mobileMenu.setAttribute('aria-hidden', String(!isOpen));
+            mobileMenuBtn.setAttribute('aria-expanded', String(isOpen));
+            menuIcon?.setAttribute('icon', isOpen ? 'lucide:x' : 'lucide:menu');
+        });
+        document.querySelectorAll('.mobile-menu-link').forEach((link) => link.addEventListener('click', closeMobileMenu));
+        document.addEventListener('click', (event) => {
+            if (mobileMenu?.classList.contains('active') && !mobileMenu.contains(event.target) && !mobileMenuBtn.contains(event.target)) closeMobileMenu();
+        });
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) closeMobileMenu();
         });
 
-        // Modal Logic with Slider
         const modal = document.getElementById('productModal');
         const modalBackdrop = document.getElementById('modalBackdrop');
         const modalPanel = document.getElementById('modalPanel');
+        const sliderTrack = document.getElementById('sliderTrack');
+        const dotIndicators = document.getElementById('dotIndicators');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
         let currentSlide = 0;
         let totalSlides = 0;
-        
+        let lastFocusedElement = null;
+        let touchStartX = 0;
+
         function openProductModal(title, desc, imgOrArray, price) {
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalDesc').innerText = desc;
-            document.getElementById('modalPrice').innerText = price;
-            
-            // Handle single image or array of images
+            lastFocusedElement = document.activeElement;
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalDesc').textContent = desc;
+            document.getElementById('modalPrice').textContent = price;
             const images = Array.isArray(imgOrArray) ? imgOrArray : [imgOrArray];
             totalSlides = images.length;
             currentSlide = 0;
-            
-            // Build slider track
-            const sliderTrack = document.getElementById('sliderTrack');
-            sliderTrack.innerHTML = '';
-            images.forEach(imgSrc => {
-                const imgElement = document.createElement('img');
-                imgElement.src = imgSrc;
-                imgElement.alt = title;
-                imgElement.className = 'w-full h-full object-contain flex-shrink-0 p-6';
-                sliderTrack.appendChild(imgElement);
+            sliderTrack.replaceChildren();
+            images.forEach((src) => {
+                const image = document.createElement('img');
+                image.src = src;
+                image.alt = title;
+                image.className = 'w-full h-full object-contain flex-shrink-0 p-6';
+                sliderTrack.appendChild(image);
             });
-            
-            // Show/hide navigation based on image count
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            const dotIndicators = document.getElementById('dotIndicators');
-            
-            if (totalSlides > 1) {
-                prevBtn.classList.remove('hidden');
-                prevBtn.classList.add('flex');
-                nextBtn.classList.remove('hidden');
-                nextBtn.classList.add('flex');
-                dotIndicators.classList.remove('hidden');
-                dotIndicators.classList.add('flex');
-                
-                // Build dot indicators
-                dotIndicators.innerHTML = '';
-                for (let i = 0; i < totalSlides; i++) {
+            dotIndicators.replaceChildren();
+            const hasSlider = totalSlides > 1;
+            [prevBtn, nextBtn, dotIndicators].forEach((element) => element.classList.toggle('hidden', !hasSlider));
+            [prevBtn, nextBtn, dotIndicators].forEach((element) => element.classList.toggle('flex', hasSlider));
+            if (hasSlider) {
+                images.forEach((_, index) => {
                     const dot = document.createElement('button');
-                    dot.className = 'w-2 h-2 rounded-full transition-all ' + (i === 0 ? 'bg-white w-6' : 'bg-white/50');
-                    dot.onclick = () => goToSlide(i);
+                    dot.type = 'button';
+                    dot.setAttribute('aria-label', `Tampilkan gambar ${index + 1}`);
+                    dot.addEventListener('click', () => goToSlide(index));
                     dotIndicators.appendChild(dot);
-                }
-            } else {
-                prevBtn.classList.add('hidden');
-                nextBtn.classList.add('hidden');
-                dotIndicators.classList.add('hidden');
+                });
             }
-            
-            // Generate WhatsApp Link
+            goToSlide(0);
             const message = `Halo Admin TEFA 40, saya tertarik dengan produk *${title}*. Mohon info lebih lanjut.`;
             document.getElementById('whatsappBtn').href = `https://wa.me/6285760387066?text=${encodeURIComponent(message)}`;
-
             modal.classList.remove('hidden');
-            setTimeout(() => {
+            document.body.style.overflow = 'hidden';
+            requestAnimationFrame(() => {
                 modalBackdrop.classList.remove('opacity-0');
                 modalPanel.classList.remove('opacity-0', 'scale-95');
-            }, 10);
-            document.body.style.overflow = 'hidden';
+                document.getElementById('closeModalBtn').focus();
+            });
         }
-        
+
         function goToSlide(index) {
+            if (!totalSlides) return;
             currentSlide = index;
-            const sliderTrack = document.getElementById('sliderTrack');
             sliderTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
-            
-            // Update dot indicators
-            const dots = document.getElementById('dotIndicators').children;
-            for (let i = 0; i < dots.length; i++) {
-                if (i === currentSlide) {
-                    dots[i].className = 'w-2 h-2 rounded-full transition-all bg-white w-6';
-                } else {
-                    dots[i].className = 'w-2 h-2 rounded-full transition-all bg-white/50';
-                }
-            }
+            Array.from(dotIndicators.children).forEach((dot, dotIndex) => {
+                const isCurrent = dotIndex === currentSlide;
+                dot.className = `h-2 rounded-full transition-all ${isCurrent ? 'w-6 bg-white' : 'w-2 bg-white/50'}`;
+                dot.setAttribute('aria-current', String(isCurrent));
+            });
         }
-        
-        function nextSlide() {
-            currentSlide = (currentSlide + 1) % totalSlides;
-            goToSlide(currentSlide);
-        }
-        
-        function prevSlide() {
-            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-            goToSlide(currentSlide);
-        }
-        
-        // Attach navigation events
-        document.getElementById('nextBtn').addEventListener('click', nextSlide);
-        document.getElementById('prevBtn').addEventListener('click', prevSlide);
+        function nextSlide() { goToSlide((currentSlide + 1) % totalSlides); }
+        function prevSlide() { goToSlide((currentSlide - 1 + totalSlides) % totalSlides); }
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
 
         function closeProductModal() {
+            if (modal.classList.contains('hidden')) return;
             modalBackdrop.classList.add('opacity-0');
             modalPanel.classList.add('opacity-0', 'scale-95');
-            
-            setTimeout(() => {
+            window.setTimeout(() => {
                 modal.classList.add('hidden');
                 document.body.style.overflow = '';
-            }, 300);
+                lastFocusedElement?.focus();
+            }, 250);
         }
-
-        // Close on backdrop click
         modalBackdrop.addEventListener('click', closeProductModal);
+        sliderTrack.addEventListener('touchstart', (event) => { touchStartX = event.changedTouches[0].screenX; }, { passive: true });
+        sliderTrack.addEventListener('touchend', (event) => {
+            const distance = event.changedTouches[0].screenX - touchStartX;
+            if (totalSlides > 1 && Math.abs(distance) > 40) distance < 0 ? nextSlide() : prevSlide();
+        }, { passive: true });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeMobileMenu();
+                closeProductModal();
+            }
+            if (!modal.classList.contains('hidden')) {
+                if (event.key === 'ArrowRight') nextSlide();
+                if (event.key === 'ArrowLeft') prevSlide();
+            }
+        });
     </script>
 </body></html>

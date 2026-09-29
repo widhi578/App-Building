@@ -167,13 +167,26 @@
         #mobile-menu {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
             opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: max-height 280ms ease, opacity 200ms ease, transform 280ms ease, visibility 280ms;
         }
         
         #mobile-menu.active {
-            max-height: 500px;
+            max-height: 360px;
             opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
         }
     </style>
     
@@ -186,7 +199,7 @@
             // Prevent scrolling during splash screen
             body.style.overflow = 'hidden';
             
-            // Hide splash screen after 2.5 seconds
+            // Keep the branded intro brief, so the first interaction is never delayed.
             setTimeout(() => {
                 splashScreen.classList.add('fade-out');
                 
@@ -195,7 +208,7 @@
                     splashScreen.remove();
                     body.style.overflow = '';
                 }, 600);
-            }, 2500);
+            }, 1200);
             
             // Mobile Menu Toggle
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
@@ -203,11 +216,20 @@
             const menuIcon = document.getElementById('menu-icon');
             
             if (mobileMenuBtn && mobileMenu) {
+                const closeMobileMenu = () => {
+                    mobileMenu.classList.remove('active');
+                    mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                    mobileMenu.setAttribute('aria-hidden', 'true');
+                    menuIcon.setAttribute('icon', 'lucide:menu');
+                };
+
                 mobileMenuBtn.addEventListener('click', () => {
-                    mobileMenu.classList.toggle('active');
+                    const isOpen = mobileMenu.classList.toggle('active');
+                    mobileMenuBtn.setAttribute('aria-expanded', String(isOpen));
+                    mobileMenu.setAttribute('aria-hidden', String(!isOpen));
                     
                     // Change icon
-                    if (mobileMenu.classList.contains('active')) {
+                    if (isOpen) {
                         menuIcon.setAttribute('icon', 'lucide:x');
                     } else {
                         menuIcon.setAttribute('icon', 'lucide:menu');
@@ -218,9 +240,18 @@
                 const menuLinks = mobileMenu.querySelectorAll('a');
                 menuLinks.forEach(link => {
                     link.addEventListener('click', () => {
-                        mobileMenu.classList.remove('active');
-                        menuIcon.setAttribute('icon', 'lucide:menu');
+                        closeMobileMenu();
                     });
+                });
+
+                document.addEventListener('click', (event) => {
+                    if (mobileMenu.classList.contains('active') && !mobileMenu.contains(event.target) && !mobileMenuBtn.contains(event.target)) closeMobileMenu();
+                });
+                document.addEventListener('keydown', (event) => {
+                    if (event.key === 'Escape') closeMobileMenu();
+                });
+                window.addEventListener('resize', () => {
+                    if (window.innerWidth >= 768) closeMobileMenu();
                 });
             }
         });
@@ -236,8 +267,8 @@
     </div>
 
     <!-- Floating Navbar (Modern Pill Style) -->
-    <div class="fixed top-6 left-0 right-0 z-50 flex justify-center px-4">
-        <nav class="bg-white/90 backdrop-blur-xl border border-slate-200/80 rounded-full shadow-xl shadow-slate-200/20 py-3 px-6 md:px-8 flex items-center justify-between gap-8 max-w-5xl w-full transition-all duration-300">
+    <div class="fixed top-4 sm:top-6 left-0 right-0 z-50 flex justify-center px-3 sm:px-4">
+        <nav class="bg-white/90 backdrop-blur-xl border border-slate-200/80 rounded-full shadow-xl shadow-slate-200/20 py-2.5 px-4 sm:px-6 md:px-8 flex items-center justify-between gap-3 sm:gap-8 max-w-5xl w-full transition-all duration-300">
             <!-- Logo Area -->
             <a href="#" class="flex items-center gap-2.5 group">
                 <img src="assets/Asli.png" alt="TEFA Logo" class="h-8 w-auto object-contain">
@@ -251,7 +282,7 @@
             <div class="hidden md:flex items-center gap-1 bg-slate-100/50 p-1 rounded-full">
                 <a href="#home" class="px-4 py-1.5 text-xs font-medium text-slate-600 hover:bg-white hover:shadow-sm hover:text-slate-900 rounded-full transition-all">Home</a>
                 <a href="#services" class="px-4 py-1.5 text-xs font-medium text-slate-600 hover:bg-white hover:shadow-sm hover:text-slate-900 rounded-full transition-all">Layanan</a>
-                <a href="#products" class="px-4 py-1.5 text-xs font-medium text-slate-600 hover:bg-white hover:shadow-sm hover:text-slate-900 rounded-full transition-all">Katalog</a>
+                <a href="katalog.html" class="px-4 py-1.5 text-xs font-medium text-slate-600 hover:bg-white hover:shadow-sm hover:text-slate-900 rounded-full transition-all">Katalog</a>
                 <a href="#about" class="px-4 py-1.5 text-xs font-medium text-slate-600 hover:bg-white hover:shadow-sm hover:text-slate-900 rounded-full transition-all">Tentang</a>
             </div>
 
@@ -261,7 +292,7 @@
                     <span>Pesan Sekarang</span>
                     <iconify-icon icon="lucide:arrow-right" width="14"></iconify-icon>
                 </a>
-                <button id="mobile-menu-btn" class="md:hidden p-2 text-slate-900 bg-slate-100 rounded-full hover:bg-slate-200 transition-colors">
+                <button id="mobile-menu-btn" type="button" aria-label="Buka menu navigasi" aria-controls="mobile-menu" aria-expanded="false" class="md:hidden p-2 text-slate-900 bg-slate-100 rounded-full hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-500/40 transition-colors">
                     <iconify-icon id="menu-icon" icon="lucide:menu" width="20"></iconify-icon>
                 </button>
             </div>
@@ -269,47 +300,46 @@
     </div>
     
     <!-- Mobile Menu Dropdown -->
-    <div id="mobile-menu" class="md:hidden fixed top-24 left-4 right-4 z-40 bg-white/95 backdrop-blur-xl border border-slate-200/80 rounded-2xl shadow-xl">
-        <div class="flex flex-col p-2">
-            <a href="#home" class="px-5 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-all">Home</a>
-            <a href="#services" class="px-5 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-all">Layanan</a>
-            <a href="#products" class="px-5 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-all">Katalog</a>
-            <a href="#about" class="px-5 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-all">Tentang</a>
-            <div class="border-t border-slate-200 my-1"></div>
-            <a href="#contact" class="px-5 py-3 text-sm font-semibold text-slate-900 hover:text-orange-600 transition-all">Pesan Sekarang</a>
+    <div id="mobile-menu" class="md:hidden fixed top-20 sm:top-24 left-3 right-3 z-40 bg-white/95 backdrop-blur-xl border border-slate-200/80 rounded-2xl shadow-xl" aria-hidden="true">
+        <div class="p-2 space-y-1">
+            <a href="#home" aria-current="page" class="mobile-menu-link flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-white bg-slate-900"><iconify-icon icon="lucide:house" width="17"></iconify-icon>Beranda</a>
+            <a href="#services" class="mobile-menu-link flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-100"><iconify-icon icon="lucide:layers-3" width="17"></iconify-icon>Layanan</a>
+            <a href="katalog.html" class="mobile-menu-link flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-100"><iconify-icon icon="lucide:grid-2x2" width="17"></iconify-icon>Katalog Produk</a>
+            <a href="#about" class="mobile-menu-link flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-100"><iconify-icon icon="lucide:circle-help" width="17"></iconify-icon>Tentang TEFA</a>
+            <a href="#contact" class="mobile-menu-link flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-orange-700 bg-orange-50 hover:bg-orange-100"><iconify-icon icon="lucide:message-circle" width="17"></iconify-icon>Pesan Sekarang</a>
         </div>
     </div>
 
     <!-- Hero Section with Iconic Typography -->
-    <section id="home" class="relative pt-40 pb-20 lg:pt-52 lg:pb-32 px-6">
+    <section id="home" class="relative pt-32 sm:pt-40 pb-16 sm:pb-20 lg:pt-52 lg:pb-32 px-4 sm:px-6">
         <div class="max-w-6xl mx-auto text-center relative z-10">
             <!-- Badge -->
-            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm text-[10px] font-bold tracking-wider uppercase text-slate-500 mb-8 fade-in-up">
+            <div class="inline-flex max-w-full items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm text-[9px] sm:text-[10px] font-bold tracking-wider uppercase text-slate-500 mb-7 sm:mb-8 fade-in-up">
                 <span class="flex h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse"></span>
                 SMKN 40 Jakarta Official Production Unit
             </div>
 
             <!-- Main Title -->
-            <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-slate-900 mb-8 leading-[0.9] fade-in-up delay-100">
+            <h1 class="text-4xl min-[390px]:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-slate-900 mb-6 sm:mb-8 leading-[0.9] fade-in-up delay-100">
                 Visual.<br>
                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">Impact.</span><br>
                 Production.
             </h1>
 
-            <p class="text-lg text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed fade-in-up delay-200">
+            <p class="text-base sm:text-lg text-slate-500 max-w-2xl mx-auto mb-8 sm:mb-10 leading-relaxed fade-in-up delay-200">
                 Pusat layanan desain grafis dan percetakan digital berbasis industri. 
                 Menggabungkan kreativitas siswa dengan standar kualitas profesional.
             </p>
 
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4 fade-in-up delay-300">
-                <a href="#products" class="group relative px-8 py-4 bg-slate-900 text-white text-sm font-semibold rounded-full overflow-hidden transition-all hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/20">
+                <a href="katalog.html" class="group relative w-full sm:w-auto px-8 py-4 bg-slate-900 text-white text-sm font-semibold rounded-full overflow-hidden transition-all hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/20">
                     <span class="relative z-10 flex items-center gap-2">
                         Lihat Katalog Produk
                         <iconify-icon icon="lucide:arrow-down-right" width="16" class="group-hover:translate-x-1 transition-transform"></iconify-icon>
                     </span>
                     <div class="absolute inset-0 bg-gradient-to-r from-orange-600 to-orange-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </a>
-                <a href="#contact" class="px-8 py-4 bg-white border border-slate-200 text-slate-900 text-sm font-semibold rounded-full hover:border-slate-400 transition-all hover:bg-slate-50">
+                <a href="#contact" class="w-full sm:w-auto px-8 py-4 bg-white border border-slate-200 text-slate-900 text-sm font-semibold rounded-full hover:border-slate-400 transition-all hover:bg-slate-50">
                     Hubungi Admin
                 </a>
             </div>
